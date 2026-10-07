@@ -1,4 +1,35 @@
-# hyperframes-ai-video-generation
+# hyperframes-ai-video-generation (Modal GPU Fleet Edition)
+
+Next-generation AI video generation powered by **HyperFrames** HTML/GSAP motion compositions and **Modal Fleet GPU Swarm** featuring:
+- **Qwen DiT 2.1** (Text-to-Image / Concepts / Scene Visuals via `hermes-qwen-img-21` across A100-80GB pool).
+- **Qwen Image 2.1 Edit** (Image-to-Image / Inpainting / Character Consistency via `graydoom-qwen-image-21-edit`).
+- **Parallel Fleet Orchestrator** (Multi-workspace load balancing across `verticalresilience`, `lovenovel`, `mvlm`, `zenonmind`, `mojopham`).
+- **HyperFrames HTML/GSAP Engine** (1080×1920 vertical shorts and 16:9 cinematic compositions rendered to MP4/WebM).
+
+---
+
+## ⚡ Modal Fleet GPU Quick Start
+
+```bash
+# 1. Probe the health and latency of all active GPU worker nodes
+npm run fleet:status
+
+# 2. Generate a single frame using Qwen DiT 2.1 with automatic failover
+npm run fleet:draw -- -p "Cinematic cybernetic astronaut in alien crystalline nebula" -a 9:16 -o assets/hero.png
+
+# 3. Edit an existing frame using Qwen Image 2.1 (consistency & inpainting)
+npm run fleet:edit -- -i assets/hero.png -p "Add glowing cyan telemetry holographic visor" -o assets/hero_edit.png
+
+# 4. Generate a complete 4-frame scene pack in parallel across the Modal fleet
+npm run fleet:scene -- --slug ai-breakthrough --topic "Autonomous Agentic AI Coding on A100 GPUs"
+
+# 5. Preview or render video with HyperFrames
+npm run video:lint templates/shorts/qwen-ai-video
+npx hyperframes preview templates/shorts/qwen-ai-video
+npm run video:render -- -p templates/shorts/qwen-ai-video -o out/demo.mp4
+```
+
+---
 
 Turn a topic prompt into a polished, AI-voiced vertical YouTube Short. One command, fire and forget.
 

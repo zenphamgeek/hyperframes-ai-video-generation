@@ -1,0 +1,26 @@
+{
+  "name": "hyperframes-ai-video-generation",
+  "version": "1.0.0",
+  "description": "HyperFrames AI Video Generation powered by Modal Fleet GPU (Qwen DiT 2.1 & Qwen Image 2.1)",
+  "main": "scripts/fleet_cli.py",
+  "scripts": {
+    "fleet:status": "python3 scripts/fleet_cli.py status",
+    "fleet:draw": "python3 scripts/fleet_cli.py draw",
+    "fleet:edit": "python3 scripts/fleet_cli.py edit",
+    "fleet:batch": "python3 scripts/fleet_cli.py batch",
+    "fleet:scene": "python3 scripts/generate_short_scenes.py",
+    "video:lint": "npx hyperframes lint",
+    "video:preview": "npx hyperframes preview",
+    "video:render": "python3 scripts/fleet_cli.py render"
+  },
+  "keywords": [
+    "hyperframes",
+    "qwen-image-2.1",
+    "qwen-dit-2.1",
+    "modal-gpu",
+    "ai-video",
+    "gsap"
+  ],
+  "author": "ZenPham",
+  "license": "MIT"
+}

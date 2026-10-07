@@ -1,0 +1,13 @@
+{
+  "$schema": "https://hyperframes.dev/schema/v1.json",
+  "id": "qwen-ai-video-short",
+  "name": "Qwen AI Video Short Template",
+  "version": "1.0.0",
+  "description": "HyperFrames vertical short driven by Modal Fleet Qwen DiT 2.1 visuals & GSAP motion",
+  "resolution": {
+    "width": 1080,
+    "height": 1920
+  },
+  "fps": 30,
+  "duration": 30
+}

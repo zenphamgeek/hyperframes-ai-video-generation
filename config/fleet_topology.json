@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "fleetName": "Modal-GPU-Swarm-VideoFrames",
+  "ditWorkers": [
+    {
+      "workspace": "verticalresilience",
+      "app": "hermes-qwen-img-21",
+      "generateUrl": "https://verticalresilience--hermes-qwen-img-21-qwenimg21worker-generate.modal.run",
+      "editUrl": "https://verticalresilience--hermes-qwen-img-21-qwenimg21worker-edit.modal.run",
+      "healthUrl": "https://verticalresilience--hermes-qwen-img-21-qwenimg21worker-health.modal.run",
+      "gpu": "A100-80GB",
+      "model": "Qwen/Qwen-Image-2.1",
+      "priority": 1
+    },
+    {
+      "workspace": "zenmaster",
+      "app": "hermes-qwen-img-21",
+      "generateUrl": "https://zenmaster--hermes-qwen-img-21-qwenimg21worker-generate.modal.run",
+      "editUrl": "https://zenmaster--hermes-qwen-img-21-qwenimg21worker-edit.modal.run",
+      "healthUrl": "https://zenmaster--hermes-qwen-img-21-qwenimg21worker-health.modal.run",
+      "gpu": "A100-80GB",
+      "model": "Qwen/Qwen-Image-2.1",
+      "priority": 2
+    },
+    {
+      "workspace": "r2rgraph",
+      "app": "hermes-qwen-img-21",
+      "generateUrl": "https://r2rgraph--hermes-qwen-img-21-qwenimg21worker-generate.modal.run",
+      "editUrl": "https://r2rgraph--hermes-qwen-img-21-qwenimg21worker-edit.modal.run",
+      "healthUrl": "https://r2rgraph--hermes-qwen-img-21-qwenimg21worker-health.modal.run",
+      "gpu": "A100-80GB",
+      "model": "Qwen/Qwen-Image-2.1",
+      "priority": 3
+    },
+    {
+      "workspace": "mojopham",
+      "app": "hermes-qwen-img-21",
+      "generateUrl": "https://mojopham--hermes-qwen-img-21-qwenimg21worker-generate.modal.run",
+      "editUrl": "https://mojopham--hermes-qwen-img-21-qwenimg21worker-edit.modal.run",
+      "healthUrl": "https://mojopham--hermes-qwen-img-21-qwenimg21worker-health.modal.run",
+      "gpu": "A100-80GB",
+      "model": "Qwen/Qwen-Image-2.1",
+      "priority": 4
+    },
+    {
+      "workspace": "mvlm",
+      "app": "hermes-qwen-img-21",
+      "generateUrl": "https://mvlm--hermes-qwen-img-21-qwenimg21worker-generate.modal.run",
+      "editUrl": "https://mvlm--hermes-qwen-img-21-qwenimg21worker-edit.modal.run",
+      "healthUrl": "https://mvlm--hermes-qwen-img-21-qwenimg21worker-health.modal.run",
+      "gpu": "A100-80GB",
+      "model": "Qwen/Qwen-Image-2.1",
+      "priority": 5
+    },
+    {
+      "workspace": "lovenovel",
+      "app": "hermes-qwen-img-21",
+      "generateUrl": "https://lovenovel--hermes-qwen-img-21-qwenimg21worker-generate.modal.run",
+      "editUrl": "https://lovenovel--hermes-qwen-img-21-qwenimg21worker-edit.modal.run",
+      "healthUrl": "https://lovenovel--hermes-qwen-img-21-qwenimg21worker-health.modal.run",
+      "gpu": "A100-80GB",
+      "model": "Qwen/Qwen-Image-2.1",
+      "priority": 6
+    },
+    {
+      "workspace": "zenonmind",
+      "app": "hermes-qwen-img-21",
+      "generateUrl": "https://zenonmind--hermes-qwen-img-21-qwenimg21worker-generate.modal.run",
+      "editUrl": "https://zenonmind--hermes-qwen-img-21-qwenimg21worker-edit.modal.run",
+      "healthUrl": "https://zenonmind--hermes-qwen-img-21-qwenimg21worker-health.modal.run",
+      "gpu": "A100-80GB",
+      "model": "Qwen/Qwen-Image-2.1",
+      "priority": 7
+    }
+  ],
+  "editWorkers": [
+    {
+      "workspace": "lovenovel",
+      "app": "graydoom-qwen-image-21-edit",
+      "editUrl": "https://lovenovel--graydoom-qwen-image-21-edit-qwenimage21edit-edit.modal.run",
+      "healthUrl": "https://lovenovel--graydoom-qwen-image-21-edit-qwenimage21edit-health.modal.run",
+      "gpu": "A100-80GB",
+      "model": "Qwen/Qwen-Image-2.1",
+      "pinnedRevision": "d26bb61231c349cf6b7896fa83353113880e1ba3"
+    },
+    {
+      "workspace": "verticalresilience",
+      "app": "graydoom-qwen-image-21-edit",
+      "editUrl": "https://verticalresilience--graydoom-qwen-image-21-edit-qwenimag-7efeef.modal.run/edit",
+      "healthUrl": "https://verticalresilience--graydoom-qwen-image-21-edit-qwenimag-7efeef.modal.run/health",
+      "gpu": "A100-80GB",
+      "model": "Qwen/Qwen-Image-2.1",
+      "pinnedRevision": "d26bb61231c349cf6b7896fa83353113880e1ba3"
+    }
+  ],
+  "videoWorkers": [
+    {
+      "workspace": "verticalresilience",
+      "app": "hermes-neural-ltxvideo",
+      "gpu": "A100-80GB",
+      "model": "Lightricks/LTX-Video",
+      "capabilities": ["text-to-video", "image-to-video", "10s-15s-24fps"]
+    }
+  ],
+  "ttsWorkers": [
+    {
+      "workspace": "lovenovel",
+      "app": "vieneu-tts-worker",
+      "endpoint": "https://lovenovel--vieneu-tts-worker-api.modal.run"
+    }
+  ]
+}

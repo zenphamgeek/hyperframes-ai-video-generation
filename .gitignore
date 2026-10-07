@@ -38,6 +38,8 @@ __pycache__/
 **/.waveform-cache/
 **/out/
 **/renders/
+**/snapshots/
+.jobs/
 videos/**
 
 # TTS chunk intermediates — large + regenerable from narration.txt + edge-tts
