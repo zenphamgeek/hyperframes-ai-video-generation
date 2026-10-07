@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HyperFrames & Modal GPU Swarm Studio</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navigation & Live Fleet Quick Status -->
+  <header>
+    <div class="logo-group">
+      <div class="logo-icon">HF</div>
+      <div class="logo-text">
+        <h1>HyperFrames Studio</h1>
+        <span>Modal Fleet GPU Swarm • Qwen 2.1</span>
+      </div>
+    </div>
+
+    <div class="fleet-quick-status">
+      <div class="node-pill" id="pill-dit">
+        <span class="dot" id="dot-dit"></span>
+        <span id="text-dit">DiT Fleet: Checking...</span>
+      </div>
+      <div class="node-pill" id="pill-edit">
+        <span class="dot" id="dot-edit"></span>
+        <span id="text-edit">Edit: Checking...</span>
+      </div>
+      <button class="btn-refresh" id="btn-refresh-fleet" onclick="fetchFleetStatus()">
+        ↻ Refresh Nodes
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main>
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('tab-dit')">
+        <span>⚡ Qwen DiT 2.1 (Draw)</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-edit')">
+        <span>🎨 Qwen Image 2.1 (Edit)</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-scenes')">
+        <span>🎬 Shorts Scene Pack (Parallel)</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-video')">
+        <span>🎥 HyperFrames Studio & Render</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-fleet')">
+        <span>📊 Fleet Telemetry & Jobs</span>
+      </button>
+    </nav>
+
+    <!-- ─────────────────────────────────────────────────────────────
+         TAB 1: QWEN DIT 2.1 DRAWING STUDIO
+         ───────────────────────────────────────────────────────────── -->
+    <section class="tab-content active" id="tab-dit">
+      <div class="studio-grid">
+        <!-- Control Panel -->
+        <div class="panel-card">
+          <div class="panel-title">
+            <span>Text-to-Image Parameters</span>
+          </div>
+
+          <div class="form-group">
+            <label>Prompt</label>
+            <textarea id="dit-prompt" placeholder="E.g. Cinematic cybernetic operative standing on rain-slicked neon skyscraper rooftop, volumetric fog, dynamic low angle, 8K ultra detailed..."></textarea>
+          </div>
+
+          <!-- Quick Prompt Presets -->
+          <div class="form-group">
+            <label>Style Presets</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn-secondary" onclick="setPreset('cyber')">Cyberpunk</button>
+              <button class="btn-secondary" onclick="setPreset('sci-fi')">Tactical Sci-Fi</button>
+              <button class="btn-secondary" onclick="setPreset('space')">Deep Cosmos</button>
+              <button class="btn-secondary" onclick="setPreset('anime')">Studio Anime</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Negative Prompt</label>
+            <input type="text" id="dit-neg" placeholder="blurry, distorted, bad anatomy, text, watermark" value="blurry, distorted, bad anatomy, text, watermark">
+          </div>
+
+          <div class="form-group">
+            <label>Aspect Ratio</label>
+            <div class="aspect-selector" id="dit-aspect-group">
+              <button class="aspect-btn active" onclick="setAspect('9:16', this)">9:16 (Shorts)</button>
+              <button class="aspect-btn" onclick="setAspect('16:9', this)">16:9 (Cinema)</button>
+              <button class="aspect-btn" onclick="setAspect('1:1', this)">1:1 (Square)</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Inference Steps: <span id="dit-steps-val" class="slider-value">40</span></label>
+            <div class="slider-group">
+              <input type="range" id="dit-steps" min="10" max="60" value="40" oninput="document.getElementById('dit-steps-val').textContent = this.value">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Guidance Scale: <span id="dit-guidance-val" class="slider-value">5.0</span></label>
+            <div class="slider-group">
+              <input type="range" id="dit-guidance" min="1.0" max="10.0" step="0.5" value="5.0" oninput="document.getElementById('dit-guidance-val').textContent = this.value">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Seed (-1 for random)</label>
+            <input type="number" id="dit-seed" value="42">
+          </div>
+
+          <button class="btn-primary" id="btn-dit-generate" onclick="runDitGeneration()">
+            <span>⚡ Generate on Modal A100 GPU</span>
+          </button>
+        </div>
+
+        <!-- Output Preview Panel -->
+        <div class="panel-card">
+          <div class="panel-title">
+            <span>Generated Frame Preview</span>
+            <span style="margin-left: auto; font-size: 12px; color: var(--text-dim);" id="dit-meta-badge"></span>
+          </div>
+
+          <div class="preview-stage" id="dit-preview-stage">
+            <div id="dit-empty-state" style="text-align: center; color: var(--text-dim);">
+              <p style="font-size: 40px; margin-bottom: 12px;">🖼️</p>
+              <p>Configure prompt and click Generate</p>
+              <span style="font-size: 12px; font-family: var(--font-mono); opacity: 0.6;">Dispatches across 5-node Modal A100 Swarm</span>
+            </div>
+
+            <div id="dit-loading-state" style="display: none; text-align: center;">
+              <div class="spinner"></div>
+              <p style="font-weight: 600; color: var(--cyan);">Diffusion in progress on Modal GPU...</p>
+              <span style="font-size: 13px; font-family: var(--font-mono); color: var(--text-dim);" id="dit-timer">0.0s elapsed</span>
+            </div>
+
+            <img id="dit-result-img" class="preview-img" style="display: none;" src="" alt="Result">
+          </div>
+
+          <div class="preview-info-bar" id="dit-info-bar" style="display: none;">
+            <div>
+              <span style="color: var(--text-dim);">Node: </span><span id="dit-info-node" style="color: var(--cyan);"></span> |
+              <span style="color: var(--text-dim);">Time: </span><span id="dit-info-time"></span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-secondary" onclick="sendToEdit()">Send to Edit →</button>
+              <a class="btn-secondary" id="dit-download-btn" href="#" download="frame.png">Download</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────────────────────────
+         TAB 2: QWEN IMAGE 2.1 EDITING STUDIO
+         ───────────────────────────────────────────────────────────── -->
+    <section class="tab-content" id="tab-edit">
+      <div class="studio-grid">
+        <div class="panel-card">
+          <div class="panel-title">
+            <span>Image-to-Image Parameters</span>
+          </div>
+
+          <div class="form-group">
+            <label>Reference Image</label>
+            <input type="file" id="edit-file-input" accept="image/*" onchange="handleImageUpload(event)" style="display: none;">
+            <button class="btn-secondary" style="width: 100%; padding: 12px;" onclick="document.getElementById('edit-file-input').click()">
+              📁 Upload Source Image
+            </button>
+          </div>
+
+          <div class="form-group">
+            <label>Edit Instruction Prompt</label>
+            <textarea id="edit-prompt" placeholder="E.g. Change hair color to silver white, add glowing cyan cybernetic visor over eyes, add tactical shoulder insignia..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Edit Strength: <span id="edit-strength-val" class="slider-value">0.75</span></label>
+            <div class="slider-group">
+              <input type="range" id="edit-strength" min="0.1" max="1.0" step="0.05" value="0.75" oninput="document.getElementById('edit-strength-val').textContent = this.value">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Steps: <span id="edit-steps-val" class="slider-value">40</span></label>
+            <div class="slider-group">
+              <input type="range" id="edit-steps" min="10" max="60" value="40" oninput="document.getElementById('edit-steps-val').textContent = this.value">
+            </div>
+          </div>
+
+          <button class="btn-primary" id="btn-edit-run" onclick="runEditGeneration()">
+            <span>🎨 Run Image Edit on Modal</span>
+          </button>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-title">
+            <span>Comparison (Source vs Edited)</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div>
+              <label>Source Image</label>
+              <div class="preview-stage" style="min-height: 380px;">
+                <img id="edit-source-preview" class="preview-img" style="display: none;" src="" alt="Source">
+                <span id="edit-source-empty" style="color: var(--text-dim); font-size: 13px;">No source loaded</span>
+              </div>
+            </div>
+
+            <div>
+              <label>Edited Output</label>
+              <div class="preview-stage" style="min-height: 380px;">
+                <div id="edit-loading" style="display: none; text-align: center;">
+                  <div class="spinner"></div>
+                  <p style="color: var(--cyan); font-weight: 600;">Applying edits on GPU...</p>
+                </div>
+                <img id="edit-result-preview" class="preview-img" style="display: none;" src="" alt="Result">
+                <span id="edit-result-empty" style="color: var(--text-dim); font-size: 13px;">Awaiting edit</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────────────────────────
+         TAB 3: SHORTS SCENE PACK GENERATOR
+         ───────────────────────────────────────────────────────────── -->
+    <section class="tab-content" id="tab-scenes">
+      <div class="panel-card" style="margin-bottom: 24px;">
+        <div class="panel-title">
+          <span>Parallel Scene Pack Generator (4 Vertical Beats for YouTube Short)</span>
+        </div>
+        <p style="color: var(--text-dim); margin-bottom: 20px; font-size: 14px;">
+          Fires 4 concurrent 9:16 scene tasks across the Modal A100 GPU fleet (Hook, Exposition, Climax, and Thumbnail Hold).
+        </p>
+
+        <div style="display: grid; grid-template-columns: 240px 1fr 200px; gap: 16px; align-items: flex-end;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Project Slug</label>
+            <input type="text" id="scene-slug" value="ai-breakthrough" placeholder="e.g. ai-future">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Short Topic / Narrative Concept</label>
+            <input type="text" id="scene-topic" value="Autonomous AI Agent Swarm Orchestration on A100 GPUs" placeholder="e.g. GPT-5 Architecture Explained">
+          </div>
+          <button class="btn-primary" id="btn-scene-pack" onclick="runScenePack()">
+            <span>⚡ Generate 4 Scenes</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Scene Cards Grid -->
+      <div class="scene-pack-grid" id="scene-grid">
+        <div class="scene-card" id="card-scene-0">
+          <div class="scene-thumb" id="thumb-scene-0"><span>1. Hook (0-7s)</span></div>
+          <div class="scene-meta">
+            <div class="scene-label">BEAT 01 // HOOK</div>
+            <div class="scene-timing">Opening Impact Frame</div>
+          </div>
+        </div>
+
+        <div class="scene-card" id="card-scene-1">
+          <div class="scene-thumb" id="thumb-scene-1"><span>2. Build (7-14s)</span></div>
+          <div class="scene-meta">
+            <div class="scene-label">BEAT 02 // EXPOSITION</div>
+            <div class="scene-timing">Technical Depth Frame</div>
+          </div>
+        </div>
+
+        <div class="scene-card" id="card-scene-2">
+          <div class="scene-thumb" id="thumb-scene-2"><span>3. Climax (14-22s)</span></div>
+          <div class="scene-meta">
+            <div class="scene-label">BEAT 03 // CLIMAX</div>
+            <div class="scene-timing">Transformation Frame</div>
+          </div>
+        </div>
+
+        <div class="scene-card" id="card-scene-3">
+          <div class="scene-thumb" id="thumb-scene-3"><span>4. Hold (22-30s)</span></div>
+          <div class="scene-meta">
+            <div class="scene-label">BEAT 04 // THUMBNAIL</div>
+            <div class="scene-timing">≥1.5s Held Final Frame</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────────────────────────
+         TAB 4: HYPERFRAMES VIDEO STUDIO & RENDER
+         ───────────────────────────────────────────────────────────── -->
+    <section class="tab-content" id="tab-video">
+      <div class="studio-grid" style="grid-template-columns: 420px 1fr;">
+        <!-- Controls -->
+        <div class="panel-card">
+          <div class="panel-title">
+            <span>HyperFrames Video Controls</span>
+          </div>
+
+          <div class="form-group">
+            <label>Select Project / Template</label>
+            <select id="video-project-select" onchange="loadProjectPreview(this.value)">
+              <option value="templates/shorts/qwen-ai-video">templates/shorts/qwen-ai-video (Qwen Fleet Default)</option>
+              <option value="templates/shorts/archon">templates/shorts/archon (Archon Theme)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Render Format</label>
+            <select id="video-render-format">
+              <option value="mp4">MP4 Video (H.264 / AAC)</option>
+              <option value="webm">WebM (Transparent Overlay)</option>
+            </select>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-bottom: 24px;">
+            <button class="btn-secondary" style="flex: 1;" onclick="reloadIframe()">
+              ↻ Reload Player
+            </button>
+            <button class="btn-secondary" style="flex: 1;" onclick="lintActiveProject()">
+              ✓ Lint Project
+            </button>
+          </div>
+
+          <button class="btn-primary" id="btn-render-video" onclick="triggerRender()">
+            <span>🎬 Render Composition to MP4</span>
+          </button>
+
+          <div id="render-status" style="margin-top: 18px; display: none;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div class="spinner" style="width: 24px; height: 24px; margin-bottom: 0;"></div>
+              <span style="font-size: 13px; font-family: var(--font-mono); color: var(--cyan);" id="render-msg">Rendering frames in headless Chrome...</span>
+            </div>
+          </div>
+
+          <div id="render-download-area" style="margin-top: 18px; display: none;">
+            <a class="btn-primary" id="btn-download-mp4" href="#" download style="background: var(--green); color: #000;">
+              ⬇ Download Rendered MP4
+            </a>
+          </div>
+        </div>
+
+        <!-- Live Preview Iframe Frame -->
+        <div class="panel-card" style="display: flex; flex-direction: column; align-items: center;">
+          <div class="panel-title" style="width: 100%;">
+            <span>Live Composition Stage (1080×1920 scaled)</span>
+          </div>
+
+          <div class="video-preview-wrapper">
+            <iframe id="video-preview-frame" class="video-iframe" src="/templates/shorts/qwen-ai-video/index.html"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────────────────────────
+         TAB 5: FLEET TELEMETRY & DURABLE JOBS
+         ───────────────────────────────────────────────────────────── -->
+    <section class="tab-content" id="tab-fleet">
+      <div class="panel-card" style="margin-bottom: 24px;">
+        <div class="panel-title">
+          <span>Modal Fleet GPU Workers Telemetry</span>
+          <button class="btn-secondary" style="margin-left: auto;" onclick="fetchFleetStatus()">Refresh Now</button>
+        </div>
+
+        <table class="fleet-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Workspace</th>
+              <th>Service</th>
+              <th>Hardware</th>
+              <th>VRAM / Pipeline</th>
+              <th>Latency</th>
+            </tr>
+          </thead>
+          <tbody id="telemetry-table-body">
+            <tr><td colspan="6" style="text-align: center; color: var(--text-dim);">Loading fleet telemetry...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-title">
+          <span>Durable Job Audit Log (.jobs/)</span>
+          <button class="btn-secondary" style="margin-left: auto;" onclick="fetchJobs()">Refresh Jobs</button>
+        </div>
+
+        <table class="fleet-table">
+          <thead>
+            <tr>
+              <th>State</th>
+              <th>Job ID</th>
+              <th>Type</th>
+              <th>Created At</th>
+              <th>Duration</th>
+              <th>Workspace / Hash</th>
+            </tr>
+          </thead>
+          <tbody id="jobs-table-body">
+            <tr><td colspan="6" style="text-align: center; color: var(--text-dim);">No jobs recorded yet</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
